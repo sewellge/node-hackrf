@@ -47,8 +47,19 @@ class HackWorker : public Nan::AsyncWorker {
   uint64_t arg;
 };
 
-Device::Device() {};
-Device::~Device() {};
+Device::Device()
+  : onRx(NULL), onTx(NULL) {};
+
+Device::~Device() {
+  if (onRx) {
+    delete onRx;
+    onRx = NULL;
+  }
+  if (onTx) {
+    delete onTx;
+    onTx = NULL;
+  }
+};
 
 Nan::Persistent<Function> Device::constructor;
 
