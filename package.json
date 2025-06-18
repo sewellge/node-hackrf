@@ -6,7 +6,8 @@
   "scripts": {
     "install": "node-gyp-build",
     "prebuild": "prebuildify -a",
-    "prebuild-ia32": "prebuildify -a --arch ia32"
+    "prebuild-ia32": "prebuildify -a --arch ia32",
+    "test": "node test/parse.js"
   },
   "repository": {
     "type": "git",
