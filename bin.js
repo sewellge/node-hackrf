@@ -1,20 +1,5 @@
 #!/usr/bin/env node
 
-var minimist = require('minimist')
-var argv = minimist(process.argv.slice(2))
-var hackrf = require('./')
-
-var devices = hackrf()
-console.log('Found %d HackRF devices', devices.length)
-if (devices.length === 0) throw new Error('No devices connected')
-var d = devices.open(0)
-
-var pulse = 0
-var low = Infinity
-var high = 0
-
-console.log('HackRF version is %s', d.getVersion())
-
 function parse (f) {
   if (typeof f === 'number') return f
   f = f.replace(/M/i, '* 1000000')
@@ -22,6 +7,24 @@ function parse (f) {
   f = f.replace(/hz/, '')
   return eval('(' + f + ')') // yolo
 }
+
+module.exports.parse = parse
+
+if (require.main === module) {
+  var minimist = require('minimist')
+  var argv = minimist(process.argv.slice(2))
+  var hackrf = require('./')
+
+  var devices = hackrf()
+  console.log('Found %d HackRF devices', devices.length)
+  if (devices.length === 0) throw new Error('No devices connected')
+  var d = devices.open(0)
+
+  var pulse = 0
+  var low = Infinity
+  var high = 0
+
+  console.log('HackRF version is %s', d.getVersion())
 
 if (argv.frequency) d.setFrequency(parse(argv.frequency))
 if (argv.bandwidth) d.setBandwidth(parse(argv.bandwidth))
@@ -73,4 +76,5 @@ if (argv.starttx) {
       else console.log('Idling...')
     }, 200)
   }
+}
 }
